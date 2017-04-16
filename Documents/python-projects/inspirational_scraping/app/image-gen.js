@@ -6,7 +6,7 @@ $(document).ready(function(){
 });
 
 // $.getJSON('https://www.reddit.com/r/wallpapers/top/.json?count=20', function(data) 
-$.getJSON("http://www.reddit.com/r/wallpaper/.json?jsonp=?", function(data) {
+$.getJSON("https://www.reddit.com/r/wallpaper/.json?jsonp=?", function(data) {
 	console.log(data);
 	var random = Math.floor(Math.random()*25);
 
