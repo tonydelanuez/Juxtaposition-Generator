@@ -38,3 +38,11 @@ h3 {
   	bottom:5%;
   	right:5%;
  }
+
+
+ @media only screen and (max-width: 767px) {
+   img { 
+    position:relative;
+  height:100%;
+  }
+}
