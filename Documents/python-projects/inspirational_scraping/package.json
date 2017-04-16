@@ -1,0 +1,22 @@
+{
+  "name": "inspirational_scraping",
+  "version": "1.0.0",
+  "description": "Node app utilizing python web scraping (beautiful soup) to generate comments from adult videos and paste them over inspirational pictures from reddit",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "NONE"
+  },
+  "author": "Tony De La Nuez",
+  "license": "MIT",
+  "dependencies": {
+    "csvtojson": "^1.1.4",
+    "express": "^4.15.2",
+    "mime": "^1.3.4",
+    "node-schedule": "^1.2.1",
+    "python-shell": "^0.4.0"
+  }
+}

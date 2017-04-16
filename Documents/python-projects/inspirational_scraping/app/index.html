@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+    <title>Inspirational Quotes from Not-So-Inspirational Folks</title>
+    <link href="https://fonts.googleapis.com/css?family=Dancing+Script" rel="stylesheet">
+    
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
+</head>
+
+<body>
+
+<div id="images">
+	
+</div>
+
+</body>
+<script type="text/javascript">
+	var theData; 
+	$(document).ready(function(){
+		$.get("/data", function(string) {
+    		theData = ' "' +  string + '" ';
+		});
+	});
+
+	// $.getJSON('https://www.reddit.com/r/wallpapers/top/.json?count=20', function(data) 
+
+	var inside_text = '"DM me Id ride u and cum where ever you wanted as long as its in you a**" - DirtyDaddy69';
+	$.getJSON("http://www.reddit.com/r/wallpaper/.json?jsonp=?", function(data) {
+		console.log(data);
+		var random = Math.floor(Math.random()*25);
+
+	    $.each(data.data.children, function(i,item){
+	    	if(i == random){
+	         $("<img/>").attr("src", item.data.url).appendTo("#images");
+	         $("<h2>").attr("id", "caption").appendTo("#images");
+	         $("<h3>").attr("id", "caption_name").appendTo("#images");
+
+	    	$("#caption").html(theData);
+	    	$("#caption_name").html("justpornhubthings");
+	    	}
+	     });
+	});
+	
+	
+</script>
+<link rel="stylesheet" type="text/css" href="styles.css">
+</html>
+
