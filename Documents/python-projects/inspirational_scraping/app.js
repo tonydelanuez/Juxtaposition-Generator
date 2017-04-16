@@ -68,4 +68,4 @@ app.get("/data", function(req, res){
 	});
 	res.send(theComment);
 });
-app.listen(3456);
+app.listen(process.env.PORT || 3456);
