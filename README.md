@@ -2,6 +2,9 @@
 
 Web application written in Python and JavaScript that generates combinations of comments from an adult video website and inspirational wallpapers from reddit.com. 
 
+## Disclaimer
+
+Any content generated from this application is not own. The comments and images rendered from scraping comment data do not represent my own opinions nor those of my employer.
 
 ## Installation
 
