@@ -13,7 +13,7 @@ Some very tame examples of the output:
 
 ![I could watch this all day](example_1.png?raw=true "I could watch this all day")
 
-![Wow beautiful](example_1.png?raw=true "wow beautiful")
+![Wow beautiful](example_2.png?raw=true "wow beautiful")
 
 
 ## Installation
