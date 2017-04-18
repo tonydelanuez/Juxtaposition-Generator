@@ -4,7 +4,16 @@ Web application written in Python and JavaScript that generates combinations of 
 
 ## Disclaimer
 
-Any content generated from this application is not own. The comments and images rendered from scraping comment data do not represent my own opinions nor those of my employer.
+Any content generated from this application is not own, and is likely highly offensive. The comments and images rendered from scraping comment data do not represent my own opinions nor those of my employer. 
+
+
+## Examples
+
+Some very tame examples of the results:
+![I could watch this all day](example_1.jpg?raw=true "I could watch this all day")
+
+![Wow beautiful](example_1.jpg?raw=true "wow beautiful")
+
 
 ## Installation
 
