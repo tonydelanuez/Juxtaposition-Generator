@@ -9,10 +9,11 @@ Any content generated from this application is not own, and is likely highly off
 
 ## Examples
 
-Some very tame examples of the results:
-![I could watch this all day](example_1.jpg?raw=true "I could watch this all day")
+Some very tame examples of the output:
 
-![Wow beautiful](example_1.jpg?raw=true "wow beautiful")
+![I could watch this all day](example_1.png?raw=true "I could watch this all day")
+
+![Wow beautiful](example_1.png?raw=true "wow beautiful")
 
 
 ## Installation
