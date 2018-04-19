@@ -23,7 +23,7 @@ page_soup = soup(page_html, "html.parser")
 
 #Grab video id's from all front page videos
 videos = [];
-vid_titles = page_soup.findAll("li", {"class":"videoblock videoBox"})
+vid_titles = page_soup.findAll("li", {"class":"js-pop videoblock videoBox"})
 for vid in vid_titles:
 	ID = vid['_vkey']
 	if ID[:2] == "ph":
