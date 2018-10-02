@@ -6,6 +6,8 @@ Web application written in Python and JavaScript that generates combinations of 
 
 Any content generated from this application is not own, and is likely highly offensive. The comments and images rendered from scraping comment data do not represent my own opinions nor those of my employer. 
 
+**By viewing this source you agree that you are 18+ years of age or are of legal viewing age for adult content in your country.**
+
 
 ## Examples
 
