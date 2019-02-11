@@ -1,6 +1,7 @@
 var theData; 
 $(document).ready(function(){
-	$.get("/data", function(string) {
+	$.get("/get-comment", function(string) {
+		console.log(theData)
 		theData = ' "' +  string + '" ';
 	});
 });

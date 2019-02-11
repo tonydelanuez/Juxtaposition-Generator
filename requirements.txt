@@ -1,0 +1,6 @@
+Flask
+beautifulsoup4
+bs4
+json
+requests
+pymongo
