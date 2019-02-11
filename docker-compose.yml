@@ -1,0 +1,11 @@
+web:
+    build: .
+    command: python app.py
+    ports:
+      - "5000:5000"
+    volumes:
+      - .:/flaskapp
+    links:
+      - db
+db:
+  image: mongo:3.0.2
