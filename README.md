@@ -20,19 +20,23 @@ Some very tame examples of the output:
 
 ## Installation
 
-Download the package as a zip or clone, then run the npm install 
+Download the package as a zip or clone, then install the requirements. 
 
-* 'npm install'
-
-If you don't have npm and/or node, follow the directions [here](https://docs.npmjs.com/getting-started/installing-node). 
+* `pip install -r requirements.txt`
 
 ## Usage
 
-Once node and npm are installed along with the dependencies covered in the step above, run: 
+Once all the dependencies are installed run in another terminal:
 
-* 'node app.js' 
+* `sudo mongod` 
 
-Then point your browser to [localhost port 3456](http://localhost:3456) and the app should be working. Initial startup is slow due to the python web scraping. 
+This starts the mongoDB server. 
+
+Finally, start the app with: 
+
+* `python app.py`
+
+Then point your browser to [localhost port 5000](http://localhost:5000) and the app should be working. Initial startup is slow due to the python web scraping. 
 
 
 ## Contributing
