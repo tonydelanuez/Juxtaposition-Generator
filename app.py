@@ -3,14 +3,13 @@ import os
 import random
 import re
 import requests
+from dbconnection import get_db
 from flask import Flask, request, send_from_directory
 from bs4 import BeautifulSoup
 from pymongo import MongoClient
 
-# database setup
-mongo_client = MongoClient()
-db = mongo_client['juxtaposition']
-db_comments = db.comments
+
+db_comments = get_db()
 # flask setup
 app = Flask(__name__, static_url_path='')
 
@@ -64,6 +63,7 @@ def is_valid_comment(comment_text):
 	""" Makes sure the comment is not spam, is not just asking for who it is, does not contain link, and is somewhat long """ 
 	return (comment_text != "[[commentMessage]]") and (comment_text.find("who") == -1) and (comment_text.find("Who") == -1) and (comment_text.find("http") == -1) and (len(comment_text) > 15)
 
+@app.route('/populate-db')
 def populate_db():
 	# Fetch and parse HTML
 	print("Building comment database...")
