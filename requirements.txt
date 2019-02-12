@@ -1,5 +1,6 @@
 Flask
 beautifulsoup4
 bs4
+gunicorn
 requests
 pymongo
