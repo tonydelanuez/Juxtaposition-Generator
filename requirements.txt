@@ -2,4 +2,3 @@ Flask==1.0.2
 beautifulsoup4==4.7.1
 bs4==0.0.1
 requests==2.20.0
-pymongo==3.7.2

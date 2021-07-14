@@ -1,94 +1,86 @@
-import json
+import logging
 import os
 import random
-import re
-import requests
-from dbconnection import get_db
+import sys
+
+from juxgen.phub import grab_page_html, grab_video_ids, scrape_video_comments
+from juxgen.reddit import get_top_images, serve_image_from_reddit
+
 from flask import Flask, request, send_from_directory
-from bs4 import BeautifulSoup
-from pymongo import MongoClient
+from typing import List
 
 
-db_comments = get_db()
+logger = logging.getLogger('juxgen')
+logger.setLevel(logging.DEBUG)
+handler = logging.StreamHandler(sys.stdout)
+handler.setLevel(logging.DEBUG)
+formatter = logging.Formatter(
+    '%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+handler.setFormatter(formatter)
+logger.addHandler(handler)
+
+comments = []
+
 # flask setup
 app = Flask(__name__, static_url_path='')
 
 # Main route
+
+
 @app.route('/')
 def return_wallpaper():
-	return send_from_directory('app', 'index.html')
+    return send_from_directory('app', 'index.html')
 
 # Serve static files - needed to get JS/CSS
+
+
 @app.route('/static/<path:path>')
 def send_js(path):
-	return send_from_directory('app', path)
+    return send_from_directory('app', path)
 
 # Testing comment
+
+
 @app.route('/healthcheck')
 def healthcheck():
-   return {'status': 200, 'message': 'OK'}
+    return {'status': 200, 'message': 'OK'}
+
 
 @app.route('/get-comment')
 def get_random_comment():
-	print("Request for comment.")
-	count = db_comments.count()
-	return db_comments.find()[random.randrange(count)]['comment']
+    logger.debug("Request for comment.")
+    return random.choice(comments)
 
-def grab_page_html(url): 
-	""" Make HTTP request and feed HTML to scraper """
-	resp = requests.get(url)
-	if resp.ok:
-		return BeautifulSoup(resp.text, 'html.parser')
-	else:
-		return None 
 
-def grab_video_ids(page_soup): 
-	""" Grab video id's from all front page videos """ 
-	vid_titles = page_soup.findAll("li", {"class":"js-pop videoblock videoBox"})
-	return [vid['_vkey'] for vid in vid_titles if vid['_vkey'][:2] == "ph"]
+@app.route('/get-image')
+def get_image():
+    logger.info("Serving image.")
+    return serve_image_from_reddit(get_top_images())
 
-def scrape_video_comments(vid_id): 
-	""" Grab the comments for a video """
-	vid_url = "https://www.pornhub.com/view_video.php?viewkey={}".format(vid_id)
-	try:
-		page = requests.get(vid_url)
-		cmt_html = BeautifulSoup(page.text, 'html.parser')
-		full_comments = cmt_html.findAll("div",{"class":"commentMessage"})
-		stripped = [c.find("span").text.strip() for c in full_comments]
-		return [re.sub(r'[^\x00-\x7f]', r'', s) for s in stripped if is_valid_comment(s)]
-	except Exception: 
-		return None
-
-def is_valid_comment(comment_text): 
-	""" Makes sure the comment is not spam, is not just asking for who it is, does not contain link, and is somewhat long """ 
-	return (comment_text != "[[commentMessage]]") and (comment_text.find("who") == -1) and (comment_text.find("Who") == -1) and (comment_text.find("http") == -1) and (len(comment_text) > 15)
 
 @app.route('/populate-db')
-def populate_db():
-	# Fetch and parse HTML
-	print("Building comment database...")
-	front_page = grab_page_html("https://www.pornhub.com/")
+def populate_db() -> List[str]:
+    # Fetch and parse HTML
+    logger.info("Building comment database...")
+    front_page = grab_page_html("https://www.pornhub.com/")
 
-	videos = grab_video_ids(front_page)
-	chosen_vids = random.sample(videos, 10)
-	
-	for vid in chosen_vids:
-		print("Grabbing video ID: %s" % vid)
-		scraped_comments = scrape_video_comments(vid)
-		if scraped_comments:
-			db_comments.insert_many([{'comment': comment} for comment in scraped_comments])
-			print("Added comments to DB.")
-		else:
-			print("No comments for %s" % vid)
+    videos = grab_video_ids(front_page)
+    chosen_vids = random.sample(videos, 10)
+
+    for vid in chosen_vids:
+        logger.info("Grabbing video ID: %s" % vid)
+        scraped_comments = scrape_video_comments(vid)
+        if scraped_comments:
+            comments.extend(scraped_comments)
+            logger.info(
+                "Added {} comments to DB.".format(
+                    len(scraped_comments)))
+        else:
+            logger.info("No comments for {}".format(vid))
+    return comments
 
 
 if __name__ == '__main__':
-	port = int(os.environ.get('PORT', 5000))
-	populate_db()
-	app.run(host='0.0.0.0', port=port)
-
-
-
-
-
-
+    port = int(os.environ.get('PORT', 5000))
+    populate_db()
+    app.run(host='0.0.0.0', port=port)
