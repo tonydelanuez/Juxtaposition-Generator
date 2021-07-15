@@ -4,6 +4,7 @@ from json.decoder import JSONDecodeError
 from typing import List, Dict
 import requests
 
+REDDIT_USER_AGENT = 'x86_64_GNU/Linux:juxtaposition-generator:v0.0.1 (by /u/TonyDarko)'
 
 def get_top_images() -> List[Dict]:
     timespan = random.choice(['month', 'day', 'year', 'all'])
@@ -23,7 +24,7 @@ def get_top_images() -> List[Dict]:
 def make_request(url: str) -> requests.Response:
     return requests.get(
         url, headers={
-            'User-Agent': 'x86_64_GNU/Linux:juxtaposition-generator:v0.0.1 (by /u/TonyDarko)'
+            'User-Agent': REDDIT_USER_AGENT
         }
     )
 
@@ -32,6 +33,7 @@ def serve_image_from_reddit(images: List[Dict]) -> requests.Response:
     image = random.choice(images)
     resp = requests.get(image['data']['url'], stream=True)
 
+    resp.headers['User-Agent'] = REDDIT_USER_AGENT
     resp.headers['Content-Disposition'] = 'attachment; filename="image.png"'
     resp.headers['Cache-Control'] = 'no-store'
 
