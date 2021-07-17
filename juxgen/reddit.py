@@ -8,17 +8,13 @@ REDDIT_USER_AGENT = 'x86_64_GNU/Linux:juxtaposition-generator:v0.0.1 (by /u/Tony
 
 def get_top_images() -> List[Dict]:
     timespan = random.choice(['month', 'day', 'year', 'all'])
-    print("Fetching images from reddit, timespan: {}".format(timespan))
     resp = make_request(
         "https://www.reddit.com/r/wallpaper/top/.json?t={}&limit=100".format(timespan))
     if resp.ok:
         data = resp.json()['data']['children']
-        print("{} images fetched".format(len(data)))
         return [item['data']['url'] for item in data]
     else:
-        print("could not fetch images from reddit")
-        print("{}".format(resp.reason))
-        return [{}]
+        return []
 
 
 def make_request(url: str) -> requests.Response:
