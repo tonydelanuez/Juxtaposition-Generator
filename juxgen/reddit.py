@@ -14,7 +14,7 @@ def get_top_images() -> List[Dict]:
     if resp.ok:
         data = resp.json()['data']['children']
         print("{} images fetched".format(len(data)))
-        return [item['data']['url'] for item in data['data']]
+        return [item['data']['url'] for item in data]
     else:
         print("could not fetch images from reddit")
         print("{}".format(resp.reason))

@@ -30,20 +30,17 @@ app = Flask(__name__, static_url_path='')
 class DataStore:
     def __init__(self,
                  name,
-                 data=[],
+                 data=None,
                  fetch_fn=(lambda: None)):
         self.name = name
-        self.data = data
+        self.data = data or []
         self.upload_counter = 0
         self.upload_refresh_interval = 10
         self.last_updated = datetime.datetime.now(),
         self.fetch_fn = fetch_fn
 
-db = {
-        'comments': [],
-        'photos': []
-}
-
+comments = object()
+photos = object()
 
 @app.route('/')
 def return_wallpaper():
@@ -61,12 +58,12 @@ def healthcheck():
 @app.route('/get-comment')
 def get_random_comment():
     logger.debug("Request for comment.")
-    return random.choice(db['comments'].data)
+    return random.choice(comments.data)
 
 @app.route('/get-image')
 def get_image():
     logger.info("Serving image.")
-    return serve_image_from_reddit(db['photos'].data)
+    return serve_image_from_reddit(photos.data)
 
 def fetch_comments() -> List[str]:
     logger.info('Starting comment fetch...')
@@ -98,10 +95,10 @@ def populate_data(model):
         logger.info(random.choice(model.data))
 
 def populate_photos_hook():
-    populate_data(db['photos'])
+    populate_data(photos)
 
 def populate_comments_hook():
-    populate_data(db['comments'])
+    populate_data(comments)
 
 if __name__ == '__main__':
     # populate both databases
@@ -109,8 +106,8 @@ if __name__ == '__main__':
 
     port = int(os.environ.get('PORT', 5000))
 
-    db['comments'] = DataStore('comments', fetch_fn=fetch_comments)
-    db['photos'] = DataStore('photos', fetch_fn=get_top_images)
+    comments = DataStore('comments', fetch_fn=fetch_comments)
+    photos = DataStore('photos', fetch_fn=get_top_images)
 
     scheduler = BackgroundScheduler()
     scheduler.add_job(populate_comments_hook, trigger='interval', seconds=5)
