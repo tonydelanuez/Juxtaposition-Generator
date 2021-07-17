@@ -18,7 +18,7 @@ h2 {
 	text-align:center;
 	color:white;
 	text-shadow: 2px 2px 4px #000000;
-/*   position: absolute; */ 
+	position: absolute;
    top: 30%; 
    left: 0; 
    padding:20px;
