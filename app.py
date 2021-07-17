@@ -1,5 +1,6 @@
 import atexit
 import datetime
+import json
 import logging
 import os
 import random
@@ -38,8 +39,10 @@ class DataStore:
         self.last_updated = datetime.datetime.now(),
         self.fetch_fn = fetch_fn
 
-comments = []
-photos = []
+db = {
+        'comments': [],
+        'photos': []
+}
 
 
 @app.route('/')
@@ -58,19 +61,12 @@ def healthcheck():
 @app.route('/get-comment')
 def get_random_comment():
     logger.debug("Request for comment.")
-    comment = random.choice(comments.data)
-    logger.info("CHOSEN COMMENT: {}".format(comment))
-    return random.choice(comments.data)
+    return random.choice(db['comments'].data)
 
 @app.route('/get-image')
 def get_image():
     logger.info("Serving image.")
-    image = random.choice(photos.data)
-    logger.info("CHOSEN PHOTO: {}".format(image))
-    if not isinstance(image, dict):
-        logger.warn('image is not dict')
-        image = random.choice(photos.data)
-    return random.choice(photos.data)['url']
+    return serve_image_from_reddit(db['photos'].data)
 
 def fetch_comments() -> List[str]:
     logger.info('Starting comment fetch...')
@@ -102,10 +98,10 @@ def populate_data(model):
         logger.info(random.choice(model.data))
 
 def populate_photos_hook():
-    populate_data(photos)
+    populate_data(db['photos'])
 
 def populate_comments_hook():
-    populate_data(comments)
+    populate_data(db['comments'])
 
 if __name__ == '__main__':
     # populate both databases
@@ -113,11 +109,8 @@ if __name__ == '__main__':
 
     port = int(os.environ.get('PORT', 5000))
 
-    comments = DataStore('comments', fetch_fn=fetch_comments)
-    photos = DataStore('photos', fetch_fn=get_top_images)
-    
-    #populate_comments_hook()
-    #populate_photos_hook()
+    db['comments'] = DataStore('comments', fetch_fn=fetch_comments)
+    db['photos'] = DataStore('photos', fetch_fn=get_top_images)
 
     scheduler = BackgroundScheduler()
     scheduler.add_job(populate_comments_hook, trigger='interval', seconds=5)

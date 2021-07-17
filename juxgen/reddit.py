@@ -14,7 +14,7 @@ def get_top_images() -> List[Dict]:
     if resp.ok:
         data = resp.json()['data']['children']
         print("{} images fetched".format(len(data)))
-        return data
+        return [item['data']['url'] for item in data['data']]
     else:
         print("could not fetch images from reddit")
         print("{}".format(resp.reason))
@@ -30,8 +30,8 @@ def make_request(url: str) -> requests.Response:
 
 
 def serve_image_from_reddit(images: List[Dict]) -> requests.Response:
-    image = random.choice(images)
-    resp = requests.get(image['data']['url'], stream=True)
+    url = random.choice(images)
+    resp = requests.get(url, stream=True)
 
     resp.headers['User-Agent'] = REDDIT_USER_AGENT
     resp.headers['Content-Disposition'] = 'attachment; filename="image.png"'
