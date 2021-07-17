@@ -1,11 +1,12 @@
 #images{
   height:100%;
+  position:relative;
 }
 
 img { 
-	position:relative;
-	height:200%;
-	width:100%;
+  background-size: cover;
+  background-repeat: no-repeat;
+  position:relative;
 }
 
 body{
@@ -17,7 +18,7 @@ h2 {
 	text-align:center;
 	color:white;
 	text-shadow: 2px 2px 4px #000000;
-   position: absolute; 
+/*   position: absolute; */ 
    top: 30%; 
    left: 0; 
    padding:20px;
@@ -34,6 +35,6 @@ h3 {
   	font-size:48px;
     opacity:.8;
   	position: absolute;
-  	bottom:5%;
-  	right:5%;
+  	bottom:0;
+  	right:0;
  }
