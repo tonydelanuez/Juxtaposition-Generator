@@ -109,9 +109,12 @@ if __name__ == '__main__':
     comments = DataStore('comments', fetch_fn=fetch_comments)
     photos = DataStore('photos', fetch_fn=get_top_images)
 
+    populate_comments_hook()
+    populate_photos_hook()
+
     scheduler = BackgroundScheduler()
-    scheduler.add_job(populate_comments_hook, trigger='interval', seconds=5)
-    scheduler.add_job(populate_photos_hook, trigger='interval', seconds=5)
+    scheduler.add_job(populate_comments_hook, trigger='interval', seconds=600)
+    scheduler.add_job(populate_photos_hook, trigger='interval', seconds=600)
 
     scheduler.start()
     atexit.register(lambda: scheduler.shutdown())
