@@ -1,17 +1,20 @@
-import atexit
 import datetime
-import json
 import logging
 import os
 import random
 import sys
 
-from juxgen.phub import grab_page_html, grab_video_ids, scrape_video_comments
-from juxgen.reddit import get_top_images, serve_image_from_reddit
+import atexit
+import click
+import json
 
 from apscheduler.schedulers.background import BackgroundScheduler
 from flask import Flask, request, send_from_directory
+from flask_sqlalchemy import SQLAlchemy
 from typing import List
+
+from juxgen.phub import grab_page_html, grab_video_ids, scrape_video_comments
+from juxgen.reddit import get_top_images, serve_image_from_reddit
 
 
 logger = logging.getLogger('juxgen')
@@ -25,6 +28,8 @@ logger.addHandler(handler)
 
 # flask setup
 app = Flask(__name__, static_url_path='')
+app.config.from_object('juxgen.config.Config')
+db = SQLAlchemy(app)
 
 
 class DataStore:
@@ -42,14 +47,22 @@ class DataStore:
 comments = object()
 photos = object()
 
+@app.cli.command("init_db")
+def init_db():
+    print("Initializing db")
+    db.drop_all()
+    db.create_all()
+    db.session.commit()
+    print("DB Initialized")
+
 @app.route('/')
 def return_wallpaper():
-    return send_from_directory('app', 'index.html')
+    return send_from_directory('frontend', 'index.html')
 
 # Serve static files - needed to get JS/CSS
 @app.route('/static/<path:path>')
 def send_js(path):
-    return send_from_directory('app', path)
+    return send_from_directory('frontend', path)
 
 @app.route('/healthcheck')
 def healthcheck():
@@ -109,14 +122,14 @@ if __name__ == '__main__':
     comments = DataStore('comments', fetch_fn=fetch_comments)
     photos = DataStore('photos', fetch_fn=get_top_images)
 
-    populate_comments_hook()
-    populate_photos_hook()
+    #populate_comments_hook()
+    #populate_photos_hook()
 
     scheduler = BackgroundScheduler()
     scheduler.add_job(populate_comments_hook, trigger='interval', seconds=600)
     scheduler.add_job(populate_photos_hook, trigger='interval', seconds=600)
 
-    scheduler.start()
-    atexit.register(lambda: scheduler.shutdown())
+    # scheduler.start()
+    # atexit.register(lambda: scheduler.shutdown())
     app.run(host='0.0.0.0', port=port, debug=False)
 

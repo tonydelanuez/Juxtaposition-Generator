@@ -1,11 +1,19 @@
 web:
     build: .
-    command: python app.py
+    command: run --port=5000 --host=0.0.0.0
     ports:
-      - "5000:5000"
+      - 5000:5000
     volumes:
       - .:/flaskapp
     links:
       - db
+    env_file:
+      - ./.env.dev
 db:
-  image: mongo:3.0.2
+  image: postgres:14-alpine
+  volumes:
+    - postgres_data:/var/lib/postgresql/data/
+  environment:
+    POSTGRES_USER: postgres
+    POSTGRES_PASSWORD: password
+    POSTGRES_DB: juxgen
