@@ -10,3 +10,4 @@ Flask-SQLAlchemy==2.5.1
 SQLAlchemy==1.4.31
 greenlet==1.1.2
 psycopg2-binary>=2.8.6
+gunicorn==20.1.0
