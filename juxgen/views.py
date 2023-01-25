@@ -30,7 +30,9 @@ def get_random_comment():
     from juxgen.models import Comment
 
     logger.debug("Request for comment.")
-    comment = db.session.query(Comment).get_random()
+    comment = None
+    while not comment:
+        comment = db.session.query(Comment).get_random()
     return comment.text
 
 
